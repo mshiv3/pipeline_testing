@@ -1,0 +1,53 @@
+# .github/workflows/ci.yml
+
+name: CI Workflow
+
+# Trigger the workflow on push to main branch or on pull requests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Define the jobs that make up this workflow
+jobs:
+  build-and-test:
+    # Use Ubuntu as the runner
+    runs-on: ubuntu-latest
+
+    # Define environment variables if needed
+    env:
+      NODE_ENV: test
+
+    # Define the steps for this job
+    steps:
+      # Step 1: Check out the code
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run tests
+      - name: Run tests
+        run: npm test
+
+      # Step 5: Build the application
+      - name: Build the application
+        run: npm run build
+
+      # Optional: Step 6: Upload build artifacts if needed
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: ./build
